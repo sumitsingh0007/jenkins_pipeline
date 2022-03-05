@@ -1,0 +1,33 @@
+pipeline{
+	agent none
+	stages{
+		stage("non-parallel stage"){
+			agent{
+				label "jenkins_master"
+			}
+			steps{
+				echo "this step will be executed first."
+			}
+		}
+		stage('run tests'){
+			parallel{
+				stage('test on windows'){
+					agent{
+						label "jenkins_slave"
+					}
+					steps{
+						echo "task1 on agent"
+					}
+				}
+				stage("test on master"){
+					agent{
+						label "jenkins_master"
+					}
+					steps{
+						echo "task2 on master"
+					}
+				}
+			}
+		}
+	}
+}
